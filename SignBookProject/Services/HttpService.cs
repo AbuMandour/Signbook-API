@@ -1,4 +1,6 @@
 ﻿using Newtonsoft.Json;
+using SignBookProject.Extensions;
+using SignBookProject.Services.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,50 +10,55 @@ using System.Threading.Tasks;
 
 namespace SignBookProject.Services
 {
-    public class HttpService
+    public class HttpService : IHttpService
     {
-        public async Task<TResponse> SendHttp<TResponse, TRequest>(TRequest entity,
-            Dictionary<string, string> headers, string contentType, string uri)
-            where
-            TResponse : class
+        static readonly HttpClient _httpClient = new HttpClient();
+        public async Task<TResponse> SendHttp<TResponse, TRequest>(TRequest requestObejct, Dictionary<string, string> headers, string uri)
         {
-            HttpRequestMessage  RequestMessage = null;
+            HttpRequestMessage  requestMessage = null;
             HttpResponseMessage responseMessage = null;
-
-            HttpClient _httpClient = new HttpClient();
 
             try
             {
+                #region Request message
+                requestMessage = new HttpRequestMessage();
+                // add headers to request message
                 if (headers != null)
-                {
-                    _httpClient.DefaultRequestHeaders.Clear();
+                {                    
                     foreach (var header in headers)
                     {
-                        _httpClient.DefaultRequestHeaders.Add(header.Key, header.Value);
+                        requestMessage.Headers.TryAddWithoutValidation(header.Key, header.Value);
                     }
                 }
-
-                StringContent dataContent = null;
-                if (entity != null)
+                //add content to request message
+                if (requestObejct != null)
                 {
-                    var json = JsonConvert.SerializeObject(entity);
-                    Console.WriteLine(json);
-                    dataContent = new StringContent(json, Encoding.UTF8, contentType);
+                    var requestJsonAsString = JsonConvert.SerializeObject(requestObejct);
+                    var dataContent = new StringContent(requestJsonAsString, Encoding.UTF8, "application/json");
+                    requestMessage.Content = dataContent;
                 }
+                //TODO change to accpect uri not string
+                //add uri to request message
+                requestMessage.RequestUri = new Uri(uri);
+                #endregion
 
-                responseMessage = await _httpClient.PostAsync(uri, dataContent);
-                var jsonString = await responseMessage.Content.ReadAsStringAsync();
-                var jsonObject = JsonConvert.DeserializeObject<TResponse>(jsonString);
-                return jsonObject;
+                #region Resoponse message
+                responseMessage = await _httpClient.SendAsync(requestMessage);
+                var responseJsonAsString = await responseMessage.Content.ReadAsStringAsync();
+                var responseObejct = JsonConvert.DeserializeObject<TResponse>(responseJsonAsString);
+                return responseObejct;
+                #endregion
             }
             catch (Exception exception)
             {
-                
+                requestMessage?.Dispose();
                 responseMessage?.Dispose();
+                Console.WriteLine(exception);                
                 throw;
             }
             finally
             {
+                requestMessage?.Dispose();
                 responseMessage?.Dispose();
             }
         }

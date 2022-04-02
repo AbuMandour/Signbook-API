@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using SignBookProject.Data;
 using SignBookProject.Models;
 using SignBookProject.Services.Interfaces;
@@ -23,15 +24,14 @@ namespace SignBookProject.Controllers
             _context = context;
         }
 
-
         [HttpPost("signup")]
-        public IActionResult SignUp([FromBody]SignUpModel model)
+        public async Task<IActionResult> SignUp([FromBody]SignUpModel model)
         {
-            var user = _context.Users.FirstOrDefault(p => p.PhoneNumber == model.PhoneNumber);
+            var user = await _context.Users.FirstOrDefaultAsync(p => p.PhoneNumber == model.PhoneNumber);
             if (user is not null)
                 return BadRequest("a user with the same PhoneNumber is already exist!");
 
-            var result = _membershipService.SignUp(model);
+            var result = await _membershipService.SignUp(model);
 
             return Ok(result);
         }

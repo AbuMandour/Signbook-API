@@ -36,7 +36,7 @@ namespace SignBookProject
             services.AddScoped<ICallService, CallService>();
             services.AddScoped<IMembershipService, MembershipService>();
             services.AddScoped<ILocationService, LocationService>();
-            
+            services.AddSingleton<IHttpService, HttpService>();
             services.AddDbContext<AppDbContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"))
                 );

@@ -8,7 +8,7 @@ namespace SignBookProject.Services.Interfaces
 {
     public interface IMembershipService
     {
-        UserModel SignUp(SignUpModel model);
+        Task<UserModel> SignUp(SignUpModel model);
         UserModel SignIn(SignInModel model);
         bool ForgetPassword(string phoneNumber);
         bool SetBundle(string userId, double newBundle);

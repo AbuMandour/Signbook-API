@@ -23,17 +23,17 @@ namespace SignBookProject.Services
             _Context = context;
         }
 
-        public UserModel SignUp(SignUpModel model)
+        public async Task<UserModel> SignUp(SignUpModel model)
         {
             var userid = Guid.NewGuid().ToString();
-            // req 
+            // create request Model
             var requestModel = new CallsRequestModel
             {
                 UserId = userid,
                 UserName = model.UserName,
                 ProfileUrl = ""
             };
-            var createUser = _callService.CreateUserInSendBird(requestModel);
+            var createUser = await _callService.CreateUserInSendBird(requestModel);
 
             var User = new UserModel
             {
