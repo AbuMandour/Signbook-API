@@ -38,9 +38,7 @@ namespace SignBookProject
             services.AddScoped<ILocationService, LocationService>();
             services.AddSingleton<IHttpService, HttpService>();
             services.AddDbContext<AppDbContext>(options =>
-                options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"))
-                );
-
+                options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
             services.AddControllers();
             services.AddSwaggerGen(c =>
             {
