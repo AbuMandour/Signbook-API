@@ -30,19 +30,18 @@ namespace SignBookProject.Services
             var requestModel = new CallsRequestModel
             {
                 UserId = userid,
-                UserName = model.UserName,
-                ProfileUrl = ""
+                Nickname = model.UserName
             };
-            var createUser = await _callService.CreateUserInSendBird(requestModel);
+            var createdUser = await _callService.CreateUserInSendBird(requestModel);
 
             var User = new UserModel
             {
                 PhoneNumber = model.PhoneNumber,
-                UserName = model.UserName,
-                UserId = userid,
+                UserName = createdUser.Nickname,
+                UserId =createdUser.UserId,
                 BundleOfMinutes = 100,
                 Password = model.Password,
-                AccessToken = createUser.AccessToken
+                AccessToken = createdUser.AccessToken
             };
 
             var result = _Context.Users.Add(User);
