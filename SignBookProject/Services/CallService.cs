@@ -25,6 +25,7 @@ namespace SignBookProject.Services
         public async Task<CallsResponseModel> CreateUserInSendBird(CallsRequestModel model)
         {
             var requestHeaders = new Dictionary<string, string>() { { Keys.sendbirdApiTokenKey, Keys.sendbirdApiTokenValue } };
+            requestHeaders.Add("Content-Type", "application/json; charset=utf8");
             //TODO create uri
             var callsResponseModel = 
                 await _httpService.SendHttp<CallsResponseModel, CallsRequestModel>

@@ -15,13 +15,11 @@ namespace SignBookProject.Controllers
     [ApiController]
     public class MembershipController : ControllerBase
     {
-        private readonly AppDbContext _context;
         private readonly IMembershipService _membershipService;
 
-        public MembershipController(IMembershipService membershipService, AppDbContext context)
+        public MembershipController(IMembershipService membershipService)
         {
             _membershipService = membershipService;
-            _context = context;
         }
 
         [HttpPost("signup")]
@@ -39,13 +37,9 @@ namespace SignBookProject.Controllers
         [HttpPost("signin")]
         public IActionResult SignIn(SignInModel model)
         {
-            var user = _context.Users.FirstOrDefault(p => p.PhoneNumber == model.phoneNumber);
-            if (user is null)
+            var user = _membershipService.SignIn(model);
+            if (user.PhoneNumber is null)
                 return BadRequest("Wrong PhoneNumber or Password!");
-            var result = _membershipService.SignIn(model);
-            if (result.PhoneNumber is null)
-                return BadRequest("Wrong PhoneNumber or Password!");
-
             return Ok(user);
 
         }

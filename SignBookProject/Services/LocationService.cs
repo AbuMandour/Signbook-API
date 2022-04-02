@@ -17,30 +17,28 @@ namespace SignBookProject.Services
             _context = context;
         }
 
-        public bool WithinRange(PointModel model)
-        {
-            List<PointModel> locations = _context.Locations.ToList();
-            foreach (var Name in locations)
-            {
-                if (Name.APoint + 20 < model.APoint || Name.APoint - 20 > model.APoint)
-                    return false;
-                if (Name.LPoint + 20 < model.LPoint || Name.LPoint - 20 > model.LPoint)
-                    return false;
-            }
-            return true;
-        }
-
+        //TODO get location and user with to async
         public BundleModel isEligible(PointModel point, string userId)
         {
-            var checkLocation = WithinRange(point);
-            if (checkLocation is false)
-                return new BundleModel { isEligible = false };
+            List<PointModel> locations = _context.Locations.ToList();
+            var userIsWithinRange = false; 
+            foreach (PointModel location in locations)
+            {
+                userIsWithinRange = WithinRange(point, location);
+            }
 
             var user = _context.Users.FirstOrDefault(u => u.UserId == userId);
-            if (user.BundleOfMinutes == 0)
-                return new BundleModel { isEligible = false, credit = user.BundleOfMinutes, userId=userId };
 
-            return new BundleModel { isEligible = true, credit = user.BundleOfMinutes, userId = userId };
+            return new BundleModel { isEligible = userIsWithinRange, credit = user.BundleOfMinutes, userId = userId };
+        }
+
+        private bool WithinRange(PointModel userPoint, PointModel refereancePoint)
+        {
+            if (refereancePoint.APoint + 20 < userPoint.APoint || refereancePoint.APoint - 20 > userPoint.APoint)
+                return false;
+            if (refereancePoint.LPoint + 20 < userPoint.LPoint || refereancePoint.LPoint - 20 > userPoint.LPoint)
+                return false;
+            return true;
         }
     }
 }

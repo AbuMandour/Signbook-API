@@ -18,16 +18,13 @@ namespace SignBookProject.Models
         public Uri ProfileUrl { get; set; }
 
         [JsonProperty("issue_access_token")]
-        public bool IssueAccessToken { get; set; }
+        public bool IssueAccessToken { get; set; } = true;
 
         [JsonProperty("session_token_expires_at")]
         public long SessionTokenExpiresAt { get; set; }
 
         [JsonProperty("discovery_keys")]
         public List<string> DiscoveryKeys { get; set; }
-
-        [JsonProperty("metadata")]
-        public Metadata Metadata { get; set; }
     }
 
     public class Metadata

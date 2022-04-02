@@ -30,35 +30,27 @@ namespace SignBookProject.Services
             var requestModel = new CallsRequestModel
             {
                 UserId = userid,
-                Nickname = model.UserName
+                Nickname = model.UserName,
             };
-            var createdUser = await _callService.CreateUserInSendBird(requestModel);
+            var callUser = await _callService.CreateUserInSendBird(requestModel);
 
             var User = new UserModel
             {
                 PhoneNumber = model.PhoneNumber,
-                UserName = createdUser.Nickname,
-                UserId =createdUser.UserId,
+                UserName = callUser.Nickname,
+                UserId = callUser.UserId,
                 BundleOfMinutes = 100,
                 Password = model.Password,
-                AccessToken = createdUser.AccessToken
+                AccessToken = callUser.AccessToken
             };
-
-            var result = _Context.Users.Add(User);
+            _Context.Users.Add(User);
             _Context.SaveChanges();
             return User;
         }
 
         public UserModel SignIn(SignInModel model)
         {
-            var userModel = new UserModel();
-
-            var user = _Context.Users.FirstOrDefault(p => p.PhoneNumber == model.phoneNumber);
-
-            if (user is null)
-                return userModel;
-            if(user.Password != model.password)
-                return userModel;
+            var user = _Context.Users.FirstOrDefault(p => p.PhoneNumber == model.phoneNumber);           
             return user;
         }
 
@@ -77,12 +69,12 @@ namespace SignBookProject.Services
         public bool SetBundle(string userId, double newBundle)
         {
             var user = _Context.Users.FirstOrDefault(u => u.UserId == userId);
-
+            if (user is null)
+                return false;
             var set = user.BundleOfMinutes - newBundle;
             var newset = user.BundleOfMinutes = set;
             var result = _Context.Users.Update(user);
             _Context.SaveChanges();
-
             return true;
         }
     }

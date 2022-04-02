@@ -15,12 +15,10 @@ namespace SignBookProject.Controllers
     public class LocationController : ControllerBase
     {
         private readonly ILocationService _locationservice;
-        private readonly AppDbContext _context;
 
-        public LocationController(ILocationService locationservice, AppDbContext context)
+        public LocationController(ILocationService locationservice)
         {
             _locationservice = locationservice;
-            _context = context;
         }
 
         [HttpPost("isEligilble")]

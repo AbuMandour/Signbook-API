@@ -22,6 +22,8 @@ namespace SignBookProject.Services
             {
                 #region Request message
                 requestMessage = new HttpRequestMessage();
+                // set request message as post
+                requestMessage.Method = HttpMethod.Post;
                 // add headers to request message
                 if (headers != null)
                 {                    
@@ -29,6 +31,7 @@ namespace SignBookProject.Services
                     {
                         requestMessage.Headers.TryAddWithoutValidation(header.Key, header.Value);
                     }
+                    requestMessage.Headers.TryAddWithoutValidation("Accept", "application/json; charset=utf8");
                 }
                 //add content to request message
                 if (requestObejct != null)
