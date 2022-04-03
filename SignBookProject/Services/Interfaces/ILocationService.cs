@@ -8,6 +8,7 @@ namespace SignBookProject.Services.Interfaces
 {
     public interface ILocationService
     {
-        BundleModel isEligible(PointModel point, string userId);
+        Task<BundleModel> isEligibleAsync(string Apoint,string LPoint, string userId);
+        Task<bool> isUserExistAsync(string userId);
     }
 }

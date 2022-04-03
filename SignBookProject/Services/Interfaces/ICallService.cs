@@ -8,6 +8,6 @@ namespace SignBookProject.Services.Interfaces
 {
     public interface ICallService
     {
-        Task<CallsResponseModel> CreateUserInSendBird(CallsRequestModel model);
+        Task<CallsResponseModel> CreateUserInSendBirdAsync(CallsRequestModel model);
     }
 }
