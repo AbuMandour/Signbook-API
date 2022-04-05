@@ -8,10 +8,11 @@ namespace SignBookProject.Services.Interfaces
 {
     public interface IMembershipService
     {
-        Task<UserModel> SignUp(SignUpModel model);
-        UserModel SignIn(SignInModel model);
-        bool ForgetPassword(string phoneNumber);
-        bool SetBundle(string userId, double newBundle);
+        Task<UserModel> SignUpAsync(SignUpModel model);
+        Task<UserModel> SignInAsync(SignInModel model);
+        Task<bool> ForgetPasswordAsync(string phoneNumber);
+        Task<bool> SetBundleAsync(string userId, string newBundle);
+        Task<bool> isUserExistAsync(string phoneNumber);
 
     }
 }

@@ -1,4 +1,5 @@
-﻿using SignBookProject.Data;
+﻿using Microsoft.EntityFrameworkCore;
+using SignBookProject.Data;
 using SignBookProject.Models;
 using SignBookProject.Services.Interfaces;
 using System;
@@ -17,26 +18,38 @@ namespace SignBookProject.Services
             _context = context;
         }
 
-        //TODO get location and user with to async
-        public BundleModel isEligible(PointModel point, string userId)
+        
+        public async Task<BundleModel> isEligibleAsync(string APoint, string LPoint, string userId)
         {
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.UserId == userId);
+
+            var doubleAPoint = Convert.ToDouble(APoint); 
+            var doubleLPoint = Convert.ToDouble(LPoint);
+
             List<PointModel> locations = _context.Locations.ToList();
             var userIsWithinRange = false; 
             foreach (PointModel location in locations)
             {
-                userIsWithinRange = WithinRange(point, location);
+                userIsWithinRange = WithinRange(doubleAPoint,doubleLPoint, location);
+                if (userIsWithinRange is true)
+                        return new BundleModel { isEligible = userIsWithinRange, credit = user.BundleOfMinutes, userId = userId };
             }
-
-            var user = _context.Users.FirstOrDefault(u => u.UserId == userId);
 
             return new BundleModel { isEligible = userIsWithinRange, credit = user.BundleOfMinutes, userId = userId };
         }
 
-        private bool WithinRange(PointModel userPoint, PointModel refereancePoint)
+        public async Task<bool> isUserExistAsync(string userId)
         {
-            if (refereancePoint.APoint + 20 < userPoint.APoint || refereancePoint.APoint - 20 > userPoint.APoint)
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.UserId == userId);
+
+            return user is not null ? true : false;
+        }
+
+        private bool WithinRange(double userAPoint, double userLPoint, PointModel refereancePoint)
+        {
+            if (refereancePoint.APoint + 20 <  userAPoint || refereancePoint.APoint - 20 > userAPoint)
                 return false;
-            if (refereancePoint.LPoint + 20 < userPoint.LPoint || refereancePoint.LPoint - 20 > userPoint.LPoint)
+            if (refereancePoint.LPoint + 20 < userLPoint || refereancePoint.LPoint - 20 > userLPoint)
                 return false;
             return true;
         }

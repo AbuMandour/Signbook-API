@@ -21,11 +21,22 @@ namespace SignBookProject.Controllers
             _locationservice = locationservice;
         }
 
-        [HttpPost("isEligilble")]
-        public BundleModel IsEligible([FromBody]PointModel point, string userId)
+        [HttpGet("isEligilble")]
+        public async Task<IActionResult> IsEligibleAsync(string Apoint,string LPoint, string userId)
         {
-            var result = _locationservice.isEligible(point, userId);
-            return result;
+            //check this
+            var user = await _locationservice.isUserExistAsync(userId);
+            if (user is false)
+                return BadRequest("no user for this id!");
+
+            var result = await _locationservice.isEligibleAsync(Apoint,LPoint, userId);
+             
+            //result contains user bundle even he is not in range in this badrequest
+            if (result.isEligible is false)
+                return BadRequest(result);
+
+
+            return Ok(result);
         }
     }
 }

@@ -22,7 +22,7 @@ namespace SignBookProject.Services
             _httpService = httpService;
         }
 
-        public async Task<CallsResponseModel> CreateUserInSendBird(CallsRequestModel model)
+        public async Task<CallsResponseModel> CreateUserInSendBirdAsync(CallsRequestModel model)
         {
             var requestHeaders = new Dictionary<string, string>() { { Keys.sendbirdApiTokenKey, Keys.sendbirdApiTokenValue } };
             requestHeaders.Add("Content-Type", "application/json; charset=utf8");
