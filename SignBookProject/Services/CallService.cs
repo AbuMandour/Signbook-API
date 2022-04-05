@@ -26,11 +26,7 @@ namespace SignBookProject.Services
         {
             var requestHeaders = new Dictionary<string, string>() { { Keys.sendbirdApiTokenKey, Keys.sendbirdApiTokenValue } };
             requestHeaders.Add("Content-Type", "application/json; charset=utf8");
-            //TODO create uri
-            var callsResponseModel = 
-                await _httpService.SendHttp<CallsResponseModel, CallsRequestModel>
-                (model, headers: requestHeaders, Uris.SendbirdUri(Keys.applicationId));
-
+            var callsResponseModel = await _httpService.SendHttp<CallsResponseModel, CallsRequestModel>(model, headers: requestHeaders, Uris.SendbirdUri(Keys.applicationId));
             return callsResponseModel;
         }
     }
