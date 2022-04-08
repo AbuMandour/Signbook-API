@@ -12,7 +12,8 @@ namespace SignBookProject.Services.Interfaces
         Task<UserModel> SignInAsync(SignInModel model);
         Task<bool> ForgetPasswordAsync(string phoneNumber);
         Task<bool> SetBundleAsync(string userId, string newBundle);
-        Task<bool> isUserExistAsync(string phoneNumber);
+        Task<UserModel> IsUserExistAsync(string phoneNumber);
+        Task<UserModel> GetUserAsync(string userId);
 
     }
 }

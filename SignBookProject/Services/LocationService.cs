@@ -12,43 +12,40 @@ namespace SignBookProject.Services
     public class LocationService : ILocationService
     {
         private readonly AppDbContext _context;
+        private readonly IMembershipService _membershipService; 
 
-        public LocationService(AppDbContext context)
+        public LocationService(AppDbContext context, IMembershipService membershipService)
         {
             _context = context;
+            _membershipService = membershipService;
         }
 
         //TODO please use user rather than userId
-        public async Task<BundleModel> isEligibleAsync(string APoint, string LPoint, string userId)
+        public async Task<BundleModel> IsEligibleAsync(string APoint, string LPoint, UserModel user)
         {
             //TODO first or default to be removed
-            var user = await _context.Users.FirstOrDefaultAsync(u => u.UserId == userId);
+            
 
             var doubleAPoint = Convert.ToDouble(APoint);
             var doubleLPoint = Convert.ToDouble(LPoint);
 
             //TODO to be async
-            List<PointModel> locations = _context.Locations.ToList();
+            List<PointModel> locations = await _context.Locations.ToListAsync();
             var userIsWithinRange = false;
             foreach (PointModel location in locations)
             {
                 userIsWithinRange = WithinRange(doubleAPoint, doubleLPoint, location);
                 //TODO please use break
-                if (userIsWithinRange is true)
-                    return new BundleModel { isEligible = userIsWithinRange, credit = user.BundleOfMinutes, userId = userId };
+                if (userIsWithinRange)
+                    break;
             }
 
-            return new BundleModel { isEligible = userIsWithinRange, credit = user.BundleOfMinutes, userId = userId };
+            return new BundleModel { isEligible = userIsWithinRange, credit = user.BundleOfMinutes, userId = user.UserId };
         }
         //TODO to be moved to membership service
-        public async Task<bool> isUserExistAsync(string userId)
-        {
-            var user = await _context.Users.FirstOrDefaultAsync(u => u.UserId == userId);
 
-            return user is not null ? true : false;
-        }
 
-        private bool WithinRange(double userAPoint, double userLPoint, PointModel refereancePoint)
+        public bool WithinRange(double userAPoint, double userLPoint, PointModel refereancePoint)
         {
             if (refereancePoint.APoint + 20 < userAPoint || refereancePoint.APoint - 20 > userAPoint)
                 return false;

@@ -27,9 +27,12 @@ namespace SignBookProject.Controllers
         public async Task<IActionResult> SignUpAsync([FromBody] SignUpModel model)
         {
             //TODO please please use is exist user before sign up
-            var result = await _membershipService.SignUpAsync(model);
+            var user = await _membershipService.IsUserExistAsync(model.PhoneNumber);
+            if (user != null)
+                return BadRequest("a user with this phone number is already exist");
 
-            if (result is null)
+            var result = await _membershipService.SignUpAsync(model);
+            if (result == null)
                 //TODO make all messages with localization pattern
                 return BadRequest("a user with this phone number is  already exist");
 
@@ -39,8 +42,8 @@ namespace SignBookProject.Controllers
         [HttpPost("signin")]
         public async Task<IActionResult> SignIn([FromBody] SignInModel model)
         {
-            var isUserExist = await _membershipService.isUserExistAsync(model.phoneNumber);
-            if (isUserExist == false)
+            var isUserExist = await _membershipService.IsUserExistAsync(model.phoneNumber);
+            if (isUserExist != null)
                 //TODO make all messages with localization pattern
                 return BadRequest("no user associate with this phone number!");
 
@@ -56,11 +59,15 @@ namespace SignBookProject.Controllers
         public async Task<IActionResult> ForgetPasswordAsyc(string phoneNumber)
         {
             //TODO please use is user exits before forget password
-            var result = await _membershipService.ForgetPasswordAsync(phoneNumber);
-            //TODO please use ! not is false
-            if (result is false)
+            var user = await _membershipService.IsUserExistAsync(phoneNumber);
+            if (user == null)
                 //TODO make all messages with localization pattern
                 return BadRequest("no user for this PhoneNumber!");
+
+            var result = await _membershipService.ForgetPasswordAsync(user.PhoneNumber);
+            //TODO please use ! not is false
+            if (!result)
+                return BadRequest("Somthing Went Wrong!");
             return Ok();
         }
 
@@ -68,10 +75,14 @@ namespace SignBookProject.Controllers
         public async Task<IActionResult> SetBundleAsync(string userId, string newBundle)
         {
             //TODO please use is user exits before set bundle
-            var result = await _membershipService.SetBundleAsync(userId, newBundle);
-            //TODO please use ! not is false
-            if (result is false)
+            var user = await _membershipService.GetUserAsync(userId);
+            if (user == null)
                 return BadRequest("no user for this phone number!");
+            
+            //TODO please use ! not is false
+            var result = await _membershipService.SetBundleAsync(user.UserId, newBundle);
+            if (!result)
+                return BadRequest("Bundle not Updated!");
             return Ok();
         }
     }

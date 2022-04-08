@@ -25,18 +25,21 @@ namespace SignBookProject.Services
         }
         //TODO please make i Capital to be I
         //TODO make method return user
-        public async Task<bool> isUserExistAsync(string phoneNumber)
+        public async Task<UserModel> IsUserExistAsync(string phoneNumber)
         {
             var user = await _context.Users.FirstOrDefaultAsync(u => u.PhoneNumber == phoneNumber);
-            return user is not null ? true : false;
+            return user;
         }
         //TODO add overloading for is user exit with user id
+        public async Task<UserModel> GetUserAsync(string userId)
+        {
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.UserId == userId);
+            return user;
+        }
+
         public async Task<UserModel> SignUpAsync(SignUpModel model)
         {
             //TODO is user exist to be removed
-            var result = await isUserExistAsync(model.PhoneNumber);
-            if (result == true)
-                return null;
 
             var userid = Guid.NewGuid().ToString();
 
@@ -76,8 +79,7 @@ namespace SignBookProject.Services
         {
             //TODO first or defualt to be removed
             var user = await _context.Users.FirstOrDefaultAsync(p => p.PhoneNumber == phoneNumber);
-            if (user is null)
-                return false;
+            
             var newPassword = _generateRandomPassword.RandomPassword();
             user.Password = newPassword;
             _context.Users.Update(user);
@@ -88,9 +90,7 @@ namespace SignBookProject.Services
         public async Task<bool> SetBundleAsync(string userId, string newBundle)
         {
             //TODO first or defualt to be removed
-            var user = await _context.Users.FirstOrDefaultAsync(u => u.UserId == userId);
-            if (user is null)
-                return false;
+            var user = await GetUserAsync(userId);
             var doubleBundle = Convert.ToDouble(newBundle);
             var set = user.BundleOfMinutes - doubleBundle;
             user.BundleOfMinutes = set;
