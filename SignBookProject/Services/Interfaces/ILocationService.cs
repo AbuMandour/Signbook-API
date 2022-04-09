@@ -8,7 +8,7 @@ namespace SignBookProject.Services.Interfaces
 {
     public interface ILocationService
     {
-        Task<BundleModel> IsEligibleAsync(string Apoint,string LPoint, UserModel user);
+        Task<BundleModel> IsEligibleAsync(string latitude, string longitude, UserModel user);
         bool WithinRange(double userAPoint, double userLPoint, PointModel refereancePoint);
     }
 }

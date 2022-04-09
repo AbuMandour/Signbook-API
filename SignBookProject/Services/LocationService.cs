@@ -20,36 +20,27 @@ namespace SignBookProject.Services
             _membershipService = membershipService;
         }
 
-        //TODO please use user rather than userId
-        public async Task<BundleModel> IsEligibleAsync(string APoint, string LPoint, UserModel user)
-        {
-            //TODO first or default to be removed
-            
+        public async Task<BundleModel> IsEligibleAsync(string latitude, string longitude, UserModel user)
+        {           
+            var doubleLatitude = Convert.ToDouble(latitude);
+            var doubleLongitude = Convert.ToDouble(longitude);
 
-            var doubleAPoint = Convert.ToDouble(APoint);
-            var doubleLPoint = Convert.ToDouble(LPoint);
-
-            //TODO to be async
             List<PointModel> locations = await _context.Locations.ToListAsync();
             var userIsWithinRange = false;
             foreach (PointModel location in locations)
             {
-                userIsWithinRange = WithinRange(doubleAPoint, doubleLPoint, location);
-                //TODO please use break
+                userIsWithinRange = WithinRange(doubleLatitude, doubleLongitude, location);
                 if (userIsWithinRange)
                     break;
             }
 
             return new BundleModel { isEligible = userIsWithinRange, credit = user.BundleOfMinutes, userId = user.UserId };
         }
-        //TODO to be moved to membership service
-
-
         public bool WithinRange(double userAPoint, double userLPoint, PointModel refereancePoint)
         {
-            if (refereancePoint.APoint + 20 < userAPoint || refereancePoint.APoint - 20 > userAPoint)
+            if (refereancePoint.Latitude + 0.180 < userAPoint || refereancePoint.Latitude - 0.180 > userAPoint)
                 return false;
-            if (refereancePoint.LPoint + 20 < userLPoint || refereancePoint.LPoint - 20 > userLPoint)
+            if (refereancePoint.Longitude + 0.180 < userLPoint || refereancePoint.Longitude - 0.180 > userLPoint)
                 return false;
             return true;
         }

@@ -9,8 +9,8 @@ namespace SignBookProject.Models
     public class PointModel
     {
         [Key]
-        public string name { get; set; }
-        public double APoint { get; set; }
-        public double LPoint { get; set; }
+        public string Name { get; set; }
+        public double Latitude { get; set; }
+        public double Longitude { get; set; }
     }
 }

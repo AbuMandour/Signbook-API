@@ -24,17 +24,12 @@ namespace SignBookProject.Controllers
         }
 
         [HttpGet("isEligilble")]
-        public async Task<IActionResult> IsEligibleAsync(string Apoint, string LPoint, string userId)
+        public async Task<IActionResult> IsEligibleAsync(string latitude , string longitude, string userId)
         {
-            //TODO please use membership user exist
-            var user = await _membershipService.GetUserAsync(userId);
-            //TODO please use ! not is false
+            var user = await _membershipService.GetUserByIdAsync(userId);
             if (user == null)
                 return BadRequest("no user associated with this id!");
-            //TODO please use capital I not i
-            var result = await _locationservice.IsEligibleAsync(Apoint, LPoint, user);
-            //TODO please use ! not is false
-            //result contains user bundle even he is not in range in this badrequest
+            var result = await _locationservice.IsEligibleAsync(latitude, longitude, user);
             if (!result.isEligible)
                 return BadRequest(result);
 

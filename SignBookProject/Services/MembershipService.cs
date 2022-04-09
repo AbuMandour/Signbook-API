@@ -23,24 +23,18 @@ namespace SignBookProject.Services
             _callService = callService;
             _context = context;
         }
-        //TODO please make i Capital to be I
-        //TODO make method return user
-        public async Task<UserModel> IsUserExistAsync(string phoneNumber)
+        public async Task<UserModel> GetUserByPhoneNumberAsync(string phoneNumber)
         {
             var user = await _context.Users.FirstOrDefaultAsync(u => u.PhoneNumber == phoneNumber);
             return user;
         }
-        //TODO add overloading for is user exit with user id
-        public async Task<UserModel> GetUserAsync(string userId)
+        public async Task<UserModel> GetUserByIdAsync(string userId)
         {
             var user = await _context.Users.FirstOrDefaultAsync(u => u.UserId == userId);
             return user;
         }
-
         public async Task<UserModel> SignUpAsync(SignUpModel model)
         {
-            //TODO is user exist to be removed
-
             var userid = Guid.NewGuid().ToString();
 
             var requestModel = new CallsRequestModel
@@ -64,7 +58,6 @@ namespace SignBookProject.Services
             await _context.SaveChangesAsync();
             return User;
         }
-
         public async Task<UserModel> SignInAsync(SignInModel model)
         {
             var user = await _context.Users.FirstOrDefaultAsync(u => u.PhoneNumber == model.phoneNumber);
@@ -74,23 +67,17 @@ namespace SignBookProject.Services
 
             return user;
         }
-
-        public async Task<bool> ForgetPasswordAsync(string phoneNumber)
-        {
-            //TODO first or defualt to be removed
-            var user = await _context.Users.FirstOrDefaultAsync(p => p.PhoneNumber == phoneNumber);
-            
+        public async Task<bool> ForgetPasswordAsync(UserModel user)
+        {            
             var newPassword = _generateRandomPassword.RandomPassword();
             user.Password = newPassword;
             _context.Users.Update(user);
             await _context.SaveChangesAsync();
             return true;
         }
-
         public async Task<bool> SetBundleAsync(string userId, string newBundle)
         {
-            //TODO first or defualt to be removed
-            var user = await GetUserAsync(userId);
+            var user = await GetUserByIdAsync(userId);
             var doubleBundle = Convert.ToDouble(newBundle);
             var set = user.BundleOfMinutes - doubleBundle;
             user.BundleOfMinutes = set;
