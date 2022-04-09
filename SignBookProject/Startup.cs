@@ -31,7 +31,6 @@ namespace SignBookProject
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-
             services.AddScoped<GenerateRandomPassword>();
             services.AddScoped<ICallService, CallService>();
             services.AddScoped<IMembershipService, MembershipService>();
@@ -42,7 +41,7 @@ namespace SignBookProject
             services.AddControllers();
             services.AddSwaggerGen(c =>
             {
-                c.SwaggerDoc("v1", new OpenApiInfo { Title = "SignBookProject", Version = "v1" });
+                c.SwaggerDoc("v1", new OpenApiInfo { Title = "SignBook-API", Version = "v1" });
             });
         }
 

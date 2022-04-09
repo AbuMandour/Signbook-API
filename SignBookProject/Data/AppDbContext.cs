@@ -19,7 +19,7 @@ namespace SignBookProject.Data
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseSqlServer(@"Data Source=(localdb)\ProjectsV13;Initial Catalog=Test;Integrated Security=True;");
+            optionsBuilder.UseSqlServer(@"Server=ABUMANDOUR;Database=signbook;User Id=sa;Password=Admin@1234;");
         }
     }
 }
