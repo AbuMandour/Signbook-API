@@ -30,9 +30,6 @@ namespace SignBookProject.Controllers
             if (user == null)
                 return BadRequest("no user associated with this id!");
             var result = await _locationservice.IsEligibleAsync(latitude, longitude, user);
-            if (!result.isEligible)
-                return BadRequest(result);
-
             return Ok(result);
         }
     }
