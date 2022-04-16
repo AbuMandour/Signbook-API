@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using SignbookApi.Models;
 using SignBookProject.Data;
 using SignBookProject.Models;
 using SignBookProject.Services.Interfaces;
@@ -52,7 +53,8 @@ namespace SignBookProject.Services
                 UserId = callUser.UserId,
                 BundleOfMinutes = 100,
                 Password = model.Password,
-                AccessToken = callUser.AccessToken
+                AccessToken = callUser.AccessToken,
+                UserRole = "user"  
             };
             await _context.Users.AddAsync(User);
             await _context.SaveChangesAsync();
@@ -84,6 +86,37 @@ namespace SignBookProject.Services
             _context.Users.Update(user);
             await _context.SaveChangesAsync();
             return true;
+        }
+        public List<ListOfUsersModel> GetListOfUsers()
+        {
+            var list = _context.Users.Select(u => new ListOfUsersModel
+            {
+                PhoneNumber = u.PhoneNumber,
+                UserId = u.UserId,
+                UserName = u.UserName,
+                UserRole = u.UserRole,
+            }).ToList();
+            return list;
+        }
+
+        public async Task<UserModel> GetUserWithoutPasswordAsync(string userId)
+        {
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.UserId == userId);
+            if(user == null)
+                return null;
+            return new UserModel { PhoneNumber = user.PhoneNumber, UserName = user.UserName, UserId = user.UserId, UserRole = user.UserRole };
+        }
+
+        public async Task<UserModel> ModifyUserRole(string userId, string role)
+        {
+            var user = await GetUserByIdAsync(userId);
+            if (user == null)
+                return null;
+
+            user.UserRole = role;
+            _context.Users.Update(user);
+            await _context.SaveChangesAsync();
+            return user;
         }
     }
 }
