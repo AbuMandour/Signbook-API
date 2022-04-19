@@ -14,6 +14,9 @@ namespace SignBookProject.Services.Interfaces
         Task<bool> SetBundleAsync(string userId, string newBundle);
         Task<UserModel> GetUserByPhoneNumberAsync(string phoneNumber);
         Task<UserModel> GetUserByIdAsync(string userId);
+        Task<ICollection<UserModel>> GetListOfUsersAsync();
+        Task<UserModel> GetUserWithoutPasswordAsync(string userId);
+        Task<UserModel> ModifyUserRole(string userId, string role);
 
     }
 }

@@ -78,5 +78,34 @@ namespace SignBookProject.Controllers
                 return BadRequest("Bundle didn't Updated!");
             return Ok();
         }
+
+        [HttpGet("listofusers")]
+        public async Task<IActionResult> GetListOfUsersAsync()
+        {
+            var result =await _membershipService.GetListOfUsersAsync();
+            if (result == null)
+                return BadRequest("No Users Founded");
+            return Ok(result);
+        }
+        [HttpGet("getuser")]
+        public async Task<IActionResult> GetUserWithoutPasswordAsync(string id)
+        {
+            var result = await _membershipService.GetUserWithoutPasswordAsync(id);
+            if (result == null)
+                return BadRequest("No user for this Id!");
+            return Ok(result);
+        }
+
+        [HttpGet("modifyrole")]
+        public async Task<IActionResult> ModifyUserRole(string userId, string role)
+        {
+            role = role.ToLower();
+            if (role != "user" && role != "admin")
+                return BadRequest($"the {role} role does not exist");
+            var result = await _membershipService.ModifyUserRole(userId, role);
+            if (result == null)
+                return BadRequest("no user for this Id!");
+            return Ok();
+        }
     }
 }

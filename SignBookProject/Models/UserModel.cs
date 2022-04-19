@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -16,6 +17,7 @@ namespace SignBookProject
         public string PhoneNumber { get; set; }
         [Required]
         public string Password { get; set; }
+        public string UserRole { get; set; }
         public string UserId { get; set; }
         public double BundleOfMinutes { get; set; }
         public string AccessToken { get; set; }
