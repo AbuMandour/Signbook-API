@@ -80,9 +80,9 @@ namespace SignBookProject.Controllers
         }
 
         [HttpGet("listofusers")]
-        public IActionResult GetListOfUsers()
+        public async Task<IActionResult> GetListOfUsersAsync()
         {
-            var result = _membershipService.GetListOfUsers();
+            var result =await _membershipService.GetListOfUsersAsync();
             if (result == null)
                 return BadRequest("No Users Founded");
             return Ok(result);

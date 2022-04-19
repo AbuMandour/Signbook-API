@@ -1,5 +1,4 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using SignbookApi.Models;
 using SignBookProject.Data;
 using SignBookProject.Models;
 using SignBookProject.Services.Interfaces;
@@ -87,15 +86,15 @@ namespace SignBookProject.Services
             await _context.SaveChangesAsync();
             return true;
         }
-        public List<ListOfUsersModel> GetListOfUsers()
+        public async Task<ICollection<UserModel>> GetListOfUsersAsync()
         {
-            var list = _context.Users.Select(u => new ListOfUsersModel
+            ICollection<UserModel> list = await _context.Users.Select(u => new UserModel
             {
                 PhoneNumber = u.PhoneNumber,
                 UserId = u.UserId,
                 UserName = u.UserName,
                 UserRole = u.UserRole,
-            }).ToList();
+            }).ToListAsync();
             return list;
         }
 

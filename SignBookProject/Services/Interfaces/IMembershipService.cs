@@ -1,5 +1,4 @@
-﻿using SignbookApi.Models;
-using SignBookProject.Models;
+﻿using SignBookProject.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,7 +14,7 @@ namespace SignBookProject.Services.Interfaces
         Task<bool> SetBundleAsync(string userId, string newBundle);
         Task<UserModel> GetUserByPhoneNumberAsync(string phoneNumber);
         Task<UserModel> GetUserByIdAsync(string userId);
-        List<ListOfUsersModel> GetListOfUsers();
+        Task<ICollection<UserModel>> GetListOfUsersAsync();
         Task<UserModel> GetUserWithoutPasswordAsync(string userId);
         Task<UserModel> ModifyUserRole(string userId, string role);
 
