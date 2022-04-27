@@ -8,6 +8,9 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
+using SignbookApi.Services;
+using SignbookApi.Services.Interfaces;
+using SignbookApi.Tools;
 using SignBookProject.Data;
 using SignBookProject.Services;
 using SignBookProject.Services.Interfaces;
@@ -31,6 +34,8 @@ namespace SignBookProject
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddTransient<IEmailService, EmailService>();
+            services.Configure<MailSettings>(Configuration.GetSection("MailSettings"));
             services.AddScoped<GenerateRandomPassword>();
             services.AddScoped<ICallService, CallService>();
             services.AddScoped<IMembershipService, MembershipService>();
