@@ -86,7 +86,7 @@ namespace SignBookProject.Services
             await _context.SaveChangesAsync();
             return true;
         }
-        public async Task<ICollection<UserModel>> GetListOfUsersAsync()
+        public async Task<ICollection<UserModel>> GetListOfAdminsAsync()
         {
             ICollection<UserModel> list = await _context.Users.Select(u => new UserModel
             {
@@ -94,7 +94,7 @@ namespace SignBookProject.Services
                 UserId = u.UserId,
                 UserName = u.UserName,
                 UserRole = u.UserRole,
-            }).ToListAsync();
+            }).Where(u=>u.UserRole == "Admin").ToListAsync();
             return list;
         }
 

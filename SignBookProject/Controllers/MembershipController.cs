@@ -79,12 +79,12 @@ namespace SignBookProject.Controllers
             return Ok();
         }
 
-        [HttpGet("listofusers")]
-        public async Task<IActionResult> GetListOfUsersAsync()
+        [HttpGet("listOfAdmins")]
+        public async Task<IActionResult> GetListOfAdminsAsync()
         {
-            var result =await _membershipService.GetListOfUsersAsync();
+            var result =await _membershipService.GetListOfAdminsAsync();
             if (result == null)
-                return BadRequest("No Users Founded");
+                return BadRequest("No Admins Founded");
             return Ok(result);
         }
         [HttpGet("getuser")]
