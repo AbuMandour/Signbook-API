@@ -23,7 +23,7 @@ namespace SignBookProject.Controllers
             _membershipService = membershipService;
         }
 
-        [HttpGet("isEligilble")]
+        [HttpGet("isEligible")]
         public async Task<IActionResult> IsEligibleAsync(string latitude , string longitude, string userId)
         {
             var user = await _membershipService.GetUserByIdAsync(userId);
