@@ -1,15 +1,3 @@
 {
-  "dependencies": {
-    "apis1": {
-      "apiEndpoint": "https://signbook.azure-api.net/",
-      "resourceId": "/subscriptions/[parameters('subscriptionId')]/resourceGroups/[parameters('resourceGroupName')]/providers/Microsoft.ApiManagement/service/Signbook/apis/signbook",
-      "type": "apis.azure"
-    },
-    "mssql1": {
-      "secretStore": "AzureAppSettings",
-      "resourceId": "/subscriptions/[parameters('subscriptionId')]/resourceGroups/[parameters('resourceGroupName')]/providers/Microsoft.Sql/servers/abumandour/databases/signbook",
-      "type": "mssql.azure",
-      "connectionId": "ConnectionStrings:DefaultConnection"
-    }
-  }
+  "dependencies": {}
 }
