@@ -25,8 +25,8 @@ namespace SignbookApi.Services
                 Sender = MailboxAddress.Parse(_mailSettings.Email),
                 Subject = model.UserName
             };
-            
-            string mailto = "muhammadabumandour@outlook.com";
+
+            string mailto = _mailSettings.Mailto;
             mail.To.Add(MailboxAddress.Parse(mailto));
 
             var builder = new BodyBuilder();
