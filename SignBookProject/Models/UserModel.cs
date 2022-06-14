@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
 namespace SignBookProject
@@ -16,10 +17,12 @@ namespace SignBookProject
         [Required]
         public string PhoneNumber { get; set; }
         [Required]
+        [JsonIgnore]
         public string Password { get; set; }
         public string UserRole { get; set; }
         public string UserId { get; set; }
         public double BundleOfMinutes { get; set; }
         public string AccessToken { get; set; }
+        public bool IsActive { get; set; }
     }
 }

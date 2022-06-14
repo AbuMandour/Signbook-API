@@ -10,6 +10,7 @@ namespace SignBookProject.Services.Interfaces
     {
         Task<UserModel> SignUpAsync(SignUpModel model);
         Task<UserModel> SignInAsync(SignInModel model);
+        Task<bool> LogOutAsync(string usreId);
         Task<bool> ForgetPasswordAsync(UserModel user);
         Task<bool> SetBundleAsync(string userId, string newBundle);
         Task<UserModel> GetUserByPhoneNumberAsync(string phoneNumber);

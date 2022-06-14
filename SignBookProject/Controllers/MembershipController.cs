@@ -53,6 +53,16 @@ namespace SignBookProject.Controllers
 
         }
 
+        [HttpGet("logout")]
+        public async Task<IActionResult> LogOutAsync(string userId)
+        {
+            var result = await _membershipService.LogOutAsync(userId);
+
+            if (result == false) return BadRequest("No user associate with this phone number!");
+
+            return Ok();
+        }
+
         [HttpGet("forgetPassword")]
         public async Task<IActionResult> ForgetPasswordAsyc(string phoneNumber)
         {
