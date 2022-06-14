@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using SignbookApi.Models;
 using SignBookProject.Data;
 using SignBookProject.Models;
 using SignBookProject.Services.Interfaces;
@@ -6,6 +7,7 @@ using SignBookProject.Tools;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -40,7 +42,7 @@ namespace SignBookProject.Services
             var requestModel = new CallsRequestModel
             {
                 UserId = userid,
-                Nickname = model.UserName,
+                Nickname = model.UserName
             };
 
             var callUser = await _callService.CreateUserInSendBirdAsync(requestModel);
@@ -53,7 +55,8 @@ namespace SignBookProject.Services
                 BundleOfMinutes = 100,
                 Password = model.Password,
                 AccessToken = callUser.AccessToken,
-                UserRole = "user"  
+                UserRole = "user",
+                IsActive = true
             };
             await _context.Users.AddAsync(User);
             await _context.SaveChangesAsync();
@@ -67,6 +70,23 @@ namespace SignBookProject.Services
                 return null;
 
             return user;
+        }
+
+        public async Task<bool> LogOutAsync(string usreId)
+        {
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.UserId == usreId);
+
+            if (user == null)
+            {
+                return false;
+            }
+            else
+            {
+                user.IsActive = false;
+                _context.Update(user);
+                await _context.SaveChangesAsync();
+            }
+            return true;
         }
         public async Task<bool> ForgetPasswordAsync(UserModel user)
         {            
@@ -88,13 +108,14 @@ namespace SignBookProject.Services
         }
         public async Task<ICollection<UserModel>> GetListOfAdminsAsync()
         {
-            ICollection<UserModel> list = await _context.Users.Select(u => new UserModel
+            var list = await _context.Users.Where(u => u.UserRole == "Admin" && u.IsActive == true).Select(u => new UserModel
             {
-                PhoneNumber = u.PhoneNumber,
                 UserId = u.UserId,
                 UserName = u.UserName,
+                PhoneNumber = u.PhoneNumber,
                 UserRole = u.UserRole,
-            }).Where(u=>u.UserRole == "Admin").ToListAsync();
+                IsActive = u.IsActive
+            }).ToListAsync();
             return list;
         }
 
