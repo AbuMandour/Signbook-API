@@ -44,5 +44,47 @@ namespace SignBookProject.Services
                 return false;
             return true;
         }
+
+        public async Task<PointModel> AddPointAsync(PointModel model)
+        {
+            var id = Guid.NewGuid().ToString();
+            var point = new PointModel
+            {
+                Id = id,
+                Name = model.Name,
+                Latitude = model.Latitude,
+                Longitude = model.Longitude
+            };
+            await _context.Locations.AddAsync(point);
+            await _context.SaveChangesAsync();
+            return point;
+        }
+
+        public async Task<PointModel> UpdatePointAsync(PointModel newPoint, string id)
+        {
+            var point = await _context.Locations.FirstOrDefaultAsync(p => p.Id == id);
+
+            if (point == null) return null;
+
+            point.Name = newPoint.Name;
+            point.Latitude = newPoint.Latitude;
+            point.Longitude = newPoint.Longitude;
+
+            _context.Locations.Update(point);
+            await _context.SaveChangesAsync();
+
+            return point;
+        }
+
+        public async Task<PointModel> DeletePointAsync(string id)
+        {
+            var point = await _context.Locations.FirstOrDefaultAsync(p=>p.Id == id);
+
+            if(point == null) return null;
+
+            _context.Locations.Remove(point);
+            await _context.SaveChangesAsync();
+            return point;
+        }
     }
 }
