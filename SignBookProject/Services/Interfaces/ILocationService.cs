@@ -10,5 +10,8 @@ namespace SignBookProject.Services.Interfaces
     {
         Task<BundleModel> IsEligibleAsync(string latitude, string longitude, UserModel user);
         bool WithinRange(double userAPoint, double userLPoint, PointModel refereancePoint);
+        Task<PointModel> AddPointAsync(PointModel point);
+        Task<PointModel> UpdatePointAsync(PointModel newPoint, string id);
+        Task<PointModel> DeletePointAsync(string id);
     }
 }

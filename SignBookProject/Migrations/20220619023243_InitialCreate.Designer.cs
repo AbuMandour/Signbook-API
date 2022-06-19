@@ -12,8 +12,8 @@ using SignBookProject.Data;
 namespace SignbookApi.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20220413004712_UserRoleToTableUser")]
-    partial class UserRoleToTableUser
+    [Migration("20220619023243_InitialCreate")]
+    partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -26,7 +26,7 @@ namespace SignbookApi.Migrations
 
             modelBuilder.Entity("SignBookProject.Models.PointModel", b =>
                 {
-                    b.Property<string>("Name")
+                    b.Property<string>("Id")
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<double>("Latitude")
@@ -35,7 +35,10 @@ namespace SignbookApi.Migrations
                     b.Property<double>("Longitude")
                         .HasColumnType("float");
 
-                    b.HasKey("Name");
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
 
                     b.ToTable("Locations");
                 });
@@ -51,6 +54,9 @@ namespace SignbookApi.Migrations
 
                     b.Property<double>("BundleOfMinutes")
                         .HasColumnType("float");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
 
                     b.Property<string>("Password")
                         .IsRequired()
